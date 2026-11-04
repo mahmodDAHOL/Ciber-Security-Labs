@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cybersecurity Roadmap Tracker</title>
+<style>
+:root{
+  --bg:#f6f7f9; --surface:#ffffff; --surface-2:#eef1f4; --text:#16202a; --muted:#5b6875;
+  --border:#d9dfe5; --accent:#0f7b6c; --accent-soft:#d8f0ec; --warn:#b45309; --warn-soft:#fdf0dc;
+  --bad:#b42318; --bad-soft:#fde4e1; --good:#15803d; --good-soft:#dcf5e3;
+  --learn:#2563eb; --lab:#7c3aed; --project:#c2410c; --cert:#0f7b6c;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1419; --surface:#161e25; --surface-2:#1f2932; --text:#e6edf3; --muted:#9aa7b3;
+    --border:#2c3843; --accent:#3cc5b0; --accent-soft:#143a35; --warn:#f0a44b; --warn-soft:#3a2a12;
+    --bad:#f28b82; --bad-soft:#3d1c1a; --good:#5fd38a; --good-soft:#163522;
+    --learn:#7aa7ff; --lab:#b69bff; --project:#ff9a62; --cert:#3cc5b0;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1419; --surface:#161e25; --surface-2:#1f2932; --text:#e6edf3; --muted:#9aa7b3;
+  --border:#2c3843; --accent:#3cc5b0; --accent-soft:#143a35; --warn:#f0a44b; --warn-soft:#3a2a12;
+  --bad:#f28b82; --bad-soft:#3d1c1a; --good:#5fd38a; --good-soft:#163522;
+  --learn:#7aa7ff; --lab:#b69bff; --project:#ff9a62; --cert:#3cc5b0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 16px 64px}
+header h1{margin:0 0 4px;font-size:26px}
+header p{margin:0;color:var(--muted)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0}
+.toolbar label{color:var(--muted);font-size:13px}
+input,select,textarea,button{font:inherit;color:var(--text)}
+input[type=date],input[type=number],input[type=text],textarea,select{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 10px}
+button{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] button.primary{color:#08201c}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) button.primary{color:#08201c}}
+nav.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto}
+nav.tabs button{border:none;border-bottom:2px solid transparent;border-radius:0;background:none;padding:10px 14px;color:var(--muted);white-space:nowrap}
+nav.tabs button.active{color:var(--text);border-bottom-color:var(--accent);font-weight:600}
+.panel{display:none}.panel.active{display:block}
+.grid{display:grid;gap:12px}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
+.kpi .label{font-size:13px;color:var(--muted)}
+.kpi .value{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}
+.kpi .sub{font-size:13px;color:var(--muted)}
+.bar{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;position:relative}
+.bar>span{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+.bar .marker{position:absolute;top:-3px;width:2px;height:14px;background:var(--text);opacity:.6}
+.pill{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;font-weight:600}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.neutral{background:var(--surface-2);color:var(--muted)}
+h2{font-size:18px;margin:24px 0 12px}
+h3{font-size:16px;margin:0}
+.phase{margin-bottom:12px}
+.phase summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:8px 16px;align-items:center}
+.phase summary::-webkit-details-marker{display:none}
+.phase .meta{color:var(--muted);font-size:13px}
+.phase .goal{margin:12px 0 8px;color:var(--muted)}
+.phase.current{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.task{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--border)}
+.task:first-child{border-top:none}
+.task input{margin-top:4px;width:16px;height:16px;accent-color:var(--accent);flex:none}
+.task label{flex:1;cursor:pointer}
+.task.done label{color:var(--muted);text-decoration:line-through}
+.type{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;min-width:58px;text-align:right;flex:none;padding-top:3px}
+.type.learn{color:var(--learn)}.type.lab{color:var(--lab)}.type.project{color:var(--project)}.type.cert{color:var(--cert)}
+.res{font-size:13px;color:var(--muted);margin-top:10px}
+.res b{color:var(--text)}
+textarea{width:100%;min-height:60px;margin-top:10px;resize:vertical}
+.skill{display:grid;grid-template-columns:minmax(140px,220px) 1fr 70px;gap:12px;align-items:center;padding:6px 0}
+.skill input[type=range]{width:100%;accent-color:var(--accent)}
+.skill .lvl{font-variant-numeric:tabular-nums;text-align:right;font-size:13px;color:var(--muted)}
+.chart{display:flex;align-items:flex-end;gap:6px;height:140px;padding-top:10px;border-bottom:1px solid var(--border)}
+.chart .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.chart .col span{width:100%;max-width:36px;background:var(--accent);border-radius:4px 4px 0 0}
+.chart .col span.low{background:var(--warn)}
+.chart .col small{font-size:11px;color:var(--muted);margin-top:4px;white-space:nowrap}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{text-align:left;padding:8px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:13px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--muted);margin-bottom:12px}
+.two{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+ul.plain{margin:6px 0 0;padding-left:18px}
+ul.plain li{margin:4px 0}
+.muted{color:var(--muted)}
+@media (max-width:560px){
+  .skill{grid-template-columns:1fr 60px}.skill input[type=range]{grid-column:1/-1;order:3}
+  .type{min-width:auto}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Cybersecurity Roadmap: 24-Month Tracker</h1>
+  <p>For IT graduates who already know Python, Linux, Docker and ERPNext. Target roles: SOC Analyst, Junior Pentester, Cloud/DevSecOps Security Engineer.</p>
+</header>
+
+<div class="toolbar">
+  <label for="start">Start date</label>
+  <input type="date" id="start">
+  <label for="weekly">Weekly hours goal</label>
+  <input type="number" id="weekly" min="1" max="60" style="width:70px">
+  <span style="flex:1"></span>
+  <button id="exportBtn">Export backup</button>
+  <button id="importBtn">Import</button>
+  <input type="file" id="importFile" accept="application/json" hidden>
+  <button id="themeBtn" title="Toggle theme">Theme</button>
+</div>
+
+<nav class="tabs" role="tablist">
+  <button class="active" data-tab="dash">Dashboard</button>
+  <button data-tab="road">Roadmap</button>
+  <button data-tab="skills">Skills</button>
+  <button data-tab="log">Study log</button>
+  <button data-tab="interview">Interview prep</button>
+  <button data-tab="guide">How to use</button>
+</nav>
+
+<!-- DASHBOARD -->
+<section class="panel active" id="dash">
+  <div class="grid kpis" id="kpis"></div>
+  <h2>Phase progress</h2>
+  <div class="card" id="phaseBars"></div>
+  <h2>Up next</h2>
+  <div class="card" id="nextUp"></div>
+  <h2>Certifications & milestones</h2>
+  <div class="card"><table id="certTable"></table></div>
+</section>
+
+<!-- ROADMAP -->
+<section class="panel" id="road">
+  <div class="legend">
+    <span><b class="type learn">Learn</b> 1 pt: theory/reading</span>
+    <span><b class="type lab">Lab</b> 2 pts: hands-on</span>
+    <span><b class="type project">Project</b> 3 pts: portfolio piece</span>
+    <span><b class="type cert">Cert</b> 4 pts: certification</span>
+  </div>
+  <div id="phases"></div>
+</section>
+
+<!-- SKILLS -->
+<section class="panel" id="skills">
+  <div class="card">
+    <p class="muted" style="margin-top:0">Rate yourself once a month. 0 = never heard of it · 1 = know the terms · 2 = followed guided labs · 3 = can do it alone · 4 = can explain it in an interview and fix problems · 5 = could teach it. <b>Job-ready target: 3+ everywhere, 4 in your specialization.</b></p>
+    <div id="skillList"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="primary" id="snapBtn">Save monthly snapshot</button>
+      <span class="muted" id="snapInfo"></span>
+    </div>
+  </div>
+  <h2>Snapshot history</h2>
+  <div class="card" style="overflow-x:auto"><table id="snapTable"></table></div>
+</section>
+
+<!-- LOG -->
+<section class="panel" id="log">
+  <div class="card">
+    <div class="row">
+      <input type="date" id="logDate" aria-label="Week date">
+      <input type="number" id="logHours" min="0" max="100" step="0.5" placeholder="Hours" style="width:90px" aria-label="Hours">
+      <input type="text" id="logNote" placeholder="What did you do? (e.g. 3 PortSwigger labs, Wazuh install)" style="flex:1;min-width:200px" aria-label="Note">
+      <button class="primary" id="logAdd">Add week</button>
+    </div>
+  </div>
+  <div class="grid kpis" id="logKpis" style="margin-top:12px"></div>
+  <h2>Last 12 entries</h2>
+  <div class="card"><div class="chart" id="logChart"></div><p class="muted" style="font-size:13px;margin-bottom:0">Orange bars fell short of your weekly goal.</p></div>
+  <h2>All entries</h2>
+  <div class="card" style="overflow-x:auto"><table id="logTable"></table></div>
+</section>
+
+<!-- INTERVIEW -->
+<section class="panel" id="interview">
+  <div class="card" style="margin-bottom:12px">
+    <p style="margin-top:0">Only tick a question when you can answer it <b>out loud, in under 2 minutes, without notes</b>. Start working through this bank in month 18 and finish it before you apply.</p>
+    <div class="bar"><span id="ivBar" style="width:0"></span></div>
+    <p class="muted" id="ivInfo" style="margin-bottom:0"></p>
+  </div>
+  <div id="ivGroups" class="grid two"></div>
+</section>
+
+<!-- GUIDE -->
+<section class="panel" id="guide">
+  <div class="grid two">
+    <div class="card">
+      <h3>Weekly rhythm (about 12 h)</h3>
+      <ul class="plain">
+        <li><b>2 weekday evenings (2 h each):</b> theory and courses</li>
+        <li><b>2 weekday evenings (2 h each):</b> labs (TryHackMe, HTB, PortSwigger)</li>
+        <li><b>Weekend (4 h):</b> project work + one public writeup</li>
+        <li><b>Sunday (10 min):</b> log your hours and tick off finished tasks</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>How progress is measured</h3>
+      <ul class="plain">
+        <li><b>Overall %</b> is weighted by points, so a cert counts 4× a reading task.</li>
+        <li><b>Expected %</b> comes from your start date (month 12 = 50%).</li>
+        <li><b>On track</b> means you're within 5% of expected. <b>Behind</b> means 5–15% under, and <b>off track</b> means more than 15% under.</li>
+        <li><b>Skills snapshots</b> show how your rating in each area grows month to month.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>How your background helps</h3>
+      <ul class="plain">
+        <li><b>Python:</b> automation, writing tools and detection logic, and reviewing code. Very few juniors bring this.</li>
+        <li><b>Linux:</b> you can move through Phase 1 Linux topics quickly.</li>
+        <li><b>Docker:</b> lets you build labs fast, and it leads straight into container and cloud security.</li>
+        <li><b>ERPNext/Frappe:</b> a real business app you can pentest, harden and threat-model on your own machine. That makes portfolio projects nobody else has.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Rules</h3>
+      <ul class="plain">
+        <li>Only attack systems you own or are explicitly authorized to test (your lab, THM, HTB, PortSwigger).</li>
+        <li>Write about everything you finish. A GitHub repo or blog post is proof of skill.</li>
+        <li>Pick your specialization by month 18 at the latest. Don't spread yourself thin.</li>
+        <li>Use <b>Export backup</b> monthly. Progress lives in this browser only.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+const PHASES = [
+ {title:"Networking & Security Foundations", months:[1,3],
+  goal:"Learn the core vocabulary of security, read network traffic, and understand how Windows works from a defender's point of view.",
+  tasks:[
+   ["learn","OSI / TCP-IP models, subnetting, routing, NAT, VLANs, firewalls"],
+   ["learn","Protocols in depth: DNS, HTTP/S, TLS handshake, SSH, SMB, LDAP, Kerberos basics"],
+   ["lab","Analyze 10 PCAPs with Wireshark/tcpdump (malware-traffic-analysis.net)"],
+   ["learn","Core concepts: CIA triad, AAA, risk, threat vs vulnerability vs exploit, defense in depth, zero trust"],
+   ["learn","Cryptography: hashing, symmetric/asymmetric, PKI, certificates, common attacks"],
+   ["learn","Windows for defenders: processes, services, registry, Event Logs, PowerShell basics"],
+   ["lab","TryHackMe: Pre-Security + Cyber Security 101 paths"],
+   ["lab","Harden a Linux server: SSH keys, sudo policy, ufw/nftables, auditd, fail2ban"],
+   ["project","Build home lab: VirtualBox/Proxmox with Kali, Windows 11, Ubuntu Server, pfSense"],
+   ["cert","CompTIA Security+ (SY0-701)"]],
+  res:"Professor Messer Security+ (free), Jason Dion practice exams, \"Practical Packet Analysis\" (Chris Sanders), TryHackMe"},
+ {title:"Blue Team: SOC & Detection", months:[4,6],
+  goal:"Work like an L1 SOC analyst: collect logs, investigate alerts, map them to ATT&CK, and handle incidents.",
+  tasks:[
+   ["learn","Log sources: key Windows Event IDs (4624/4625/4688/4720/7045), Sysmon, Linux auth & syslog"],
+   ["learn","Frameworks: MITRE ATT&CK, Cyber Kill Chain, Pyramid of Pain"],
+   ["lab","Deploy Wazuh or Elastic SIEM with Docker; ship logs from Windows + Linux VMs"],
+   ["lab","Splunk Fundamentals + Boss of the SOC (BOTS) datasets"],
+   ["learn","Detection engineering: Sigma, YARA, Suricata rules"],
+   ["learn","Incident response lifecycle (NIST SP 800-61), triage, playbooks"],
+   ["lab","Phishing analysis: headers, SPF/DKIM/DMARC, URL & attachment sandboxing"],
+   ["lab","TryHackMe SOC Level 1 path or LetsDefend alerts (50+ investigated)"],
+   ["project","Python log analyzer: detects brute force & suspicious process creation, sends alerts"],
+   ["cert","BTL1 (Blue Team Level 1) or CompTIA CySA+"]],
+  res:"TryHackMe SOC L1, LetsDefend, Splunk BOTS, Wazuh docs, SigmaHQ repo, \"Blue Team Handbook\""},
+ {title:"Offensive Fundamentals & Web Security", months:[7,9],
+  goal:"Think like an attacker. Learn pentest methodology, the OWASP Top 10, and privilege escalation, then write a professional report.",
+  tasks:[
+   ["learn","Pentest methodology (PTES), scoping, rules of engagement, legal boundaries"],
+   ["lab","Recon & enumeration: nmap, ffuf/gobuster, enum4linux-ng, nikto, whatweb"],
+   ["learn","OWASP Top 10 (2021) + OWASP API Security Top 10"],
+   ["lab","PortSwigger Web Security Academy: all Apprentice + 50% of Practitioner labs"],
+   ["lab","Burp Suite fluency: Proxy, Repeater, Intruder, Decoder, extensions"],
+   ["lab","Linux & Windows privilege escalation (GTFOBins, LOLBAS, linPEAS/winPEAS)"],
+   ["lab","Hack The Box Starting Point + 15 easy retired boxes, with writeups"],
+   ["project","Pentest your own local ERPNext/Frappe instance in Docker and write a full report"],
+   ["cert","eJPT (INE Junior Penetration Tester)"]],
+  res:"PortSwigger Academy (free), HTB Academy, TCM Security courses, \"The Web Application Hacker's Handbook\", IppSec videos"},
+ {title:"Active Directory & Security Automation", months:[10,12],
+  goal:"Learn how enterprise Windows networks are attacked and defended, and turn your Python skills into security tools.",
+  tasks:[
+   ["learn","AD architecture: domains, forests, trusts, GPO, Kerberos & NTLM authentication"],
+   ["lab","Build a vulnerable AD lab (GOAD, or DC + 2 workstations)"],
+   ["lab","AD attacks: Kerberoasting, AS-REP roasting, pass-the-hash, BloodHound path analysis"],
+   ["lab","Detect your own AD attacks in your SIEM: red finds, blue detects"],
+   ["project","Python security toolkit (scanner, subdomain enum, log IOC extractor) on GitHub with tests"],
+   ["learn","Vulnerability management: OpenVAS/Nessus, CVSS, EPSS, KEV, patch prioritization"],
+   ["lab","TryHackMe Jr Penetration Tester path completed"],
+   ["project","Year-1 portfolio: GitHub profile + blog with 10 writeups"],
+   ["cert","(Optional) PNPT or CompTIA PenTest+"]],
+  res:"GOAD (Orange Cyberdefense), TCM PEH course, \"Black Hat Python\", BloodHound docs, adsecurity.org"},
+ {title:"Cloud & Container Security", months:[13,15],
+  goal:"Build on your Docker experience to become strong in cloud IAM, misconfiguration hunting, and container hardening.",
+  tasks:[
+   ["learn","Shared responsibility model, cloud IAM deep dive (AWS first, Azure basics)"],
+   ["lab","AWS: IAM policies, CloudTrail, GuardDuty, Security Hub, S3 misconfigurations"],
+   ["lab","flaws.cloud, flaws2.cloud, CloudGoat scenarios"],
+   ["learn","Docker security: minimal images, rootless, capabilities, seccomp, CIS Docker Benchmark"],
+   ["lab","Image scanning with Trivy/Grype; runtime detection with Falco"],
+   ["learn","Kubernetes security: RBAC, NetworkPolicies, Pod Security Standards, kube-bench"],
+   ["lab","Kubernetes Goat walkthrough"],
+   ["project","Hardened ERPNext docker-compose deployment + CIS benchmark before/after report"],
+   ["cert","AWS Certified Security – Specialty (or Microsoft AZ-500)"]],
+  res:"AWS Skill Builder, \"Hacking the Cloud\" wiki, CloudGoat, Kubernetes Goat, CIS Benchmarks, Trivy/Falco docs"},
+ {title:"AppSec & DevSecOps", months:[16,18],
+  goal:"Build security into software delivery and review Python/Frappe code for real vulnerabilities.",
+  tasks:[
+   ["learn","Secure SDLC & threat modeling (STRIDE, data-flow diagrams, OWASP Threat Dragon)"],
+   ["lab","SAST: run Semgrep & Bandit on Python/Frappe apps; write 5 custom Semgrep rules"],
+   ["lab","DAST: OWASP ZAP automated scans"],
+   ["lab","Supply chain: gitleaks, pip-audit, Dependabot, SBOM with Syft"],
+   ["project","GitHub Actions DevSecOps pipeline: build → SAST → SCA → image scan → DAST → deploy"],
+   ["learn","Secure code review in Python: injection, broken authz, SSRF, deserialization, path traversal"],
+   ["lab","Audit Frappe whitelisted methods: allow_guest, permission checks, raw frappe.db.sql injection"],
+   ["learn","Secrets management: HashiCorp Vault, cloud KMS, rotation"],
+   ["cert","(Optional) Certified DevSecOps Professional (CDP)"]],
+  res:"OWASP ASVS & Cheat Sheets, Semgrep docs, OWASP Juice Shop, \"Alice and Bob Learn Application Security\""},
+ {title:"Specialization + GRC", months:[19,21],
+  goal:"Go deep in one track, and learn enough governance, risk and compliance to talk to management.",
+  tasks:[
+   ["learn","Choose track: SOC/DFIR · Pentest · Cloud/DevSecOps (best fit for your background)"],
+   ["learn","GRC: ISO 27001, NIST CSF 2.0, CIS Controls v8, SOC 2, GDPR basics"],
+   ["lab","Write a risk assessment + 5 security policies for a fictional SME running ERPNext"],
+   ["lab","DFIR basics: Volatility 3 memory analysis, Autopsy, timelines with KAPE/Plaso"],
+   ["lab","Malware analysis intro: static & dynamic analysis in FLARE-VM / REMnux"],
+   ["lab","40+ hours of focused labs in your chosen track"],
+   ["project","Track capstone: detection-as-code repo, OSCP-style multi-host report, or cloud security baseline"],
+   ["cert","Track cert: OSCP · GCIH/BTL2 · CKS or AWS Security (if not done)"]],
+  res:"OffSec PEN-200, 13Cubed (DFIR), SANS posters, ISO 27001 Annex A summaries, NIST CSF 2.0 docs"},
+ {title:"Job Readiness & Interviews", months:[22,24],
+  goal:"Get ready to interview: polished portfolio, practiced answers, a network of contacts, and steady applications.",
+  tasks:[
+   ["project","Portfolio polish: GitHub README, 3 flagship projects with demos, blog, LinkedIn"],
+   ["learn","Tailored resumes per role (SOC / Pentest / Cloud Sec); map projects to job keywords"],
+   ["lab","Compete in 4+ CTFs (CTFtime) and publish writeups"],
+   ["learn","Finish the Interview prep question bank (all answered out loud)"],
+   ["lab","5 mock interviews (peers, mentors, Discord communities)"],
+   ["learn","8 behavioral stories in STAR format (conflict, failure, learning fast, incident)"],
+   ["lab","Attend BSides / OWASP chapter / local meetups; 20 networking conversations"],
+   ["project","Apply to 10+ targeted roles per week; track every application"],
+   ["cert","Final cert push or renewals (CompTIA CE)"]],
+  res:"CTFtime.org, r/cybersecurity careers threads, \"Cybersecurity Career Guide\", LinkedIn, local ISSA/OWASP chapters"}
+];
+const WEIGHT = {learn:1,lab:2,project:3,cert:4};
+
+const SKILLS = [
+ ["net","Networking & protocols"],["os","Linux & Windows internals"],["fund","Security fundamentals & crypto"],
+ ["soc","SOC / SIEM / detection"],["ir","Incident response"],["web","Web app security"],
+ ["pt","Pentesting & privesc"],["ad","Active Directory"],["cloud","Cloud security"],
+ ["cont","Containers & Kubernetes"],["appsec","AppSec / DevSecOps"],["dfir","Forensics & malware"],
+ ["grc","GRC & frameworks"],["auto","Python security automation"],["comm","Reporting & communication"]
+];
+
+const IV = {
+ "Networking":[
+  "What happens when you type a URL into a browser and press Enter?",
+  "TCP vs UDP: differences, and the three-way handshake",
+  "Explain DNS resolution and common DNS attacks (poisoning, tunneling)",
+  "How does TLS work? What does a certificate prove?",
+  "Common ports: 22, 25, 53, 80, 443, 445, 389, 3389, 88"],
+ "Security concepts":[
+  "Encryption vs hashing vs encoding",
+  "Symmetric vs asymmetric encryption, and where each is used",
+  "Explain the CIA triad with real examples",
+  "What is defense in depth? What is zero trust?",
+  "Vulnerability vs threat vs risk vs exploit"],
+ "SOC & incident response":[
+  "Walk me through how you triage an alert",
+  "You see many 4625 events followed by a 4624. What do you do?",
+  "Explain MITRE ATT&CK and how a SOC uses it",
+  "Phases of incident response (NIST)",
+  "How would you analyze a suspected phishing email?",
+  "False positive vs false negative: which is worse and why?"],
+ "Web & pentest":[
+  "Explain SQL injection and how to prevent it",
+  "XSS types (reflected, stored, DOM) and mitigations",
+  "CSRF vs SSRF",
+  "How do you approach a black-box web app test?",
+  "What is Kerberoasting and how is it detected?",
+  "Linux privilege escalation: what do you check first?"],
+ "Cloud & containers":[
+  "Shared responsibility model in AWS",
+  "How would you secure an S3 bucket?",
+  "Why is running containers as root dangerous?",
+  "How would you secure a CI/CD pipeline?",
+  "IAM least privilege: how do you enforce it?"],
+ "Behavioral":[
+  "Tell me about yourself (90-second pitch)",
+  "Why cybersecurity, coming from IT/ERP?",
+  "Tell me about a project you're proud of (portfolio)",
+  "Describe a time you learned something difficult quickly",
+  "How do you stay current with threats? (sources you actually use)",
+  "Tell me about a mistake and what you changed afterward"]
+};
+
+const KEY="cyberplan.v1";
+const blank = ()=>({start:new Date().toISOString().slice(0,10),weekly:12,done:{},notes:{},skills:{},snaps:[],log:[],iv:{},theme:null});
+let S = blank();
+try{ const raw=localStorage.getItem(KEY); if(raw) S=Object.assign(blank(),JSON.parse(raw)); }catch(e){}
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const tid=(p,t)=>`p${p}t${t}`;
+
+function monthsElapsed(){
+  const st=new Date(S.start+"T00:00:00"), now=new Date();
+  return Math.max(0,(now-st)/(1000*60*60*24*30.44));
+}
+function phaseStats(i){
+  let tot=0,got=0,n=0,d=0;
+  PHASES[i].tasks.forEach((t,j)=>{const w=WEIGHT[t[0]];tot+=w;n++;if(S.done[tid(i,j)]){got+=w;d++;}});
+  return {tot,got,n,d,pct:tot?got/tot*100:0};
+}
+function overall(){
+  let tot=0,got=0,n=0,d=0;
+  PHASES.forEach((_,i)=>{const s=phaseStats(i);tot+=s.tot;got+=s.got;n+=s.n;d+=s.d;});
+  return {pct:got/tot*100,n,d};
+}
+function curPhase(){ const m=Math.min(24,Math.floor(monthsElapsed())+1); return PHASES.findIndex(p=>m>=p.months[0]&&m<=p.months[1]); }
+
+function renderDash(){
+  const o=overall(), mE=monthsElapsed(), exp=Math.min(100,mE/24*100), diff=o.pct-exp;
+  const status = diff>=-5?["good",diff>5?"Ahead":"On track"]:diff>=-15?["warn","Behind"]:["bad","Off track"];
+  const cp=curPhase(), month=Math.min(24,Math.floor(mE)+1);
+  const hrs=S.log.reduce((a,b)=>a+ +b.hours,0);
+  const sk=Object.values(S.skills); const avgSk=sk.length?(sk.reduce((a,b)=>a+ +b,0)/SKILLS.length):0;
+  const ivN=Object.values(IV).flat().length, ivD=Object.values(S.iv).filter(Boolean).length;
+  $("#kpis").innerHTML=`
+   <div class="card kpi"><div class="label">Overall progress</div><div class="value">${o.pct.toFixed(0)}%</div>
+     <div class="bar" style="margin:6px 0"><span style="width:${o.pct}%"></span><i class="marker" style="left:${exp}%"></i></div>
+     <div class="sub">Expected ${exp.toFixed(0)}% · <span class="pill ${status[0]}">${status[1]}</span></div></div>
+   <div class="card kpi"><div class="label">Current month</div><div class="value">${month} / 24</div><div class="sub">${cp>=0?"Phase "+(cp+1)+": "+esc(PHASES[cp].title):"Plan complete"}</div></div>
+   <div class="card kpi"><div class="label">Tasks completed</div><div class="value">${o.d} / ${o.n}</div><div class="sub">Weighted by points</div></div>
+   <div class="card kpi"><div class="label">Hours logged</div><div class="value">${hrs.toFixed(0)}</div><div class="sub">Target ≈ ${Math.round(S.weekly*104)} h over 2 years</div></div>
+   <div class="card kpi"><div class="label">Avg skill level</div><div class="value">${avgSk.toFixed(1)} / 5</div><div class="sub">Job-ready ≈ 3.0+</div></div>
+   <div class="card kpi"><div class="label">Interview readiness</div><div class="value">${ivN?Math.round(ivD/ivN*100):0}%</div><div class="sub">${ivD} / ${ivN} questions</div></div>`;
+  $("#phaseBars").innerHTML=PHASES.map((p,i)=>{const s=phaseStats(i);
+    return `<div style="margin:10px 0"><div class="row" style="justify-content:space-between"><span><b>P${i+1}</b> ${esc(p.title)} <span class="muted">· M${p.months[0]}–${p.months[1]}</span>${i===cp?' <span class="pill neutral">now</span>':''}</span><span class="muted">${s.pct.toFixed(0)}%</span></div><div class="bar"><span style="width:${s.pct}%"></span></div></div>`}).join("");
+  const next=[]; PHASES.forEach((p,i)=>p.tasks.forEach((t,j)=>{if(!S.done[tid(i,j)]&&next.length<5)next.push([i,j,t]);}));
+  $("#nextUp").innerHTML=next.length?next.map(([i,j,t])=>`<div class="task"><input type="checkbox" data-id="${tid(i,j)}" id="n-${tid(i,j)}"><label for="n-${tid(i,j)}">${esc(t[1])} <span class="muted">· P${i+1}</span></label><span class="type ${t[0]}">${t[0]}</span></div>`).join(""):"<p>Every task is done. Time to apply for jobs.</p>";
+  $("#certTable").innerHTML="<tr><th>Phase</th><th>Milestone</th><th>Target</th><th>Status</th></tr>"+PHASES.map((p,i)=>{
+    const j=p.tasks.findIndex(t=>t[0]==="cert"); const done=S.done[tid(i,j)]; const late=!done&&month>p.months[1];
+    return `<tr><td>P${i+1}</td><td>${esc(p.tasks[j][1])}</td><td>Month ${p.months[1]}</td><td><span class="pill ${done?"good":late?"bad":"neutral"}">${done?"Done":late?"Overdue":"Pending"}</span></td></tr>`}).join("");
+}
+
+function renderRoad(){
+  const cp=curPhase();
+  $("#phases").innerHTML=PHASES.map((p,i)=>{const s=phaseStats(i);
+    return `<details class="card phase ${i===cp?"current":""}" ${i===cp?"open":""}>
+     <summary><div><h3>Phase ${i+1}: ${esc(p.title)}</h3><div class="meta">Months ${p.months[0]}–${p.months[1]} · ${s.d}/${s.n} tasks · ${s.got}/${s.tot} pts</div></div>
+     <div style="width:120px"><div class="bar"><span style="width:${s.pct}%"></span></div><div class="meta" style="text-align:right">${s.pct.toFixed(0)}%</div></div></summary>
+     <p class="goal">${esc(p.goal)}</p>
+     <div>${p.tasks.map((t,j)=>{const id=tid(i,j),d=!!S.done[id];return `<div class="task ${d?"done":""}"><input type="checkbox" id="${id}" data-id="${id}" ${d?"checked":""}><label for="${id}">${esc(t[1])}</label><span class="type ${t[0]}">${t[0]}</span></div>`}).join("")}</div>
+     <div class="res"><b>Resources:</b> ${esc(p.res)}</div>
+     <textarea data-note="${i}" placeholder="Notes, links, reflections for this phase…">${esc(S.notes[i]||"")}</textarea>
+    </details>`}).join("");
+}
+
+function renderSkills(){
+  $("#skillList").innerHTML=SKILLS.map(([k,n])=>{const v=S.skills[k]||0;
+    return `<div class="skill"><label for="sk-${k}">${esc(n)}</label><input type="range" min="0" max="5" step="1" id="sk-${k}" data-sk="${k}" value="${v}"><span class="lvl" id="lv-${k}">${v} / 5</span></div>`}).join("");
+  const sn=S.snaps;
+  $("#snapInfo").textContent=sn.length?`Last snapshot: ${sn[sn.length-1].date}`:"No snapshots yet. Save one now to set your baseline.";
+  if(!sn.length){$("#snapTable").innerHTML="<tr><td class='muted'>Snapshots will appear here.</td></tr>";return;}
+  const shown=sn.slice(-6), first=sn[0];
+  $("#snapTable").innerHTML="<tr><th>Skill</th>"+shown.map(s=>`<th>${s.date}</th>`).join("")+"<th>Growth</th></tr>"+
+   SKILLS.map(([k,n])=>{const g=(shown[shown.length-1].r[k]||0)-(first.r[k]||0);
+    return `<tr><td>${esc(n)}</td>${shown.map(s=>`<td>${s.r[k]||0}</td>`).join("")}<td><span class="pill ${g>0?"good":"neutral"}">${g>0?"+":""}${g}</span></td></tr>`}).join("");
+}
+
+function renderLog(){
+  const L=[...S.log].sort((a,b)=>a.date.localeCompare(b.date));
+  const tot=L.reduce((a,b)=>a+ +b.hours,0), last4=L.slice(-4), avg4=last4.length?last4.reduce((a,b)=>a+ +b.hours,0)/last4.length:0;
+  let streak=0; for(let i=L.length-1;i>=0&&+L[i].hours>=S.weekly;i--)streak++;
+  $("#logKpis").innerHTML=`
+   <div class="card kpi"><div class="label">Total hours</div><div class="value">${tot.toFixed(1)}</div></div>
+   <div class="card kpi"><div class="label">Avg last 4 weeks</div><div class="value">${avg4.toFixed(1)}</div><div class="sub">Goal ${S.weekly} h/week</div></div>
+   <div class="card kpi"><div class="label">Goal streak</div><div class="value">${streak}</div><div class="sub">Weeks in a row that met the goal</div></div>
+   <div class="card kpi"><div class="label">Weeks logged</div><div class="value">${L.length}</div><div class="sub">of ~104</div></div>`;
+  const c=L.slice(-12), mx=Math.max(S.weekly*1.5,...c.map(x=>+x.hours),1);
+  $("#logChart").innerHTML=c.length?c.map(x=>`<div class="col" title="${esc(x.date)}: ${x.hours} h"><span class="${+x.hours<S.weekly?"low":""}" style="height:${+x.hours/mx*100}%"></span><small>${x.date.slice(5)}</small></div>`).join(""):"<p class='muted'>Log your first week above.</p>";
+  $("#logTable").innerHTML="<tr><th>Week of</th><th>Hours</th><th>Notes</th><th></th></tr>"+[...L].reverse().map(x=>`<tr><td>${esc(x.date)}</td><td>${x.hours}</td><td>${esc(x.note||"")}</td><td><button data-del="${esc(x.id)}" aria-label="Delete">✕</button></td></tr>`).join("");
+}
+
+function renderIV(){
+  const all=Object.values(IV).flat().length, d=Object.values(S.iv).filter(Boolean).length;
+  $("#ivBar").style.width=(d/all*100)+"%"; $("#ivInfo").textContent=`${d} of ${all} questions you can answer confidently.`;
+  $("#ivGroups").innerHTML=Object.entries(IV).map(([g,qs],gi)=>`<div class="card"><h3>${esc(g)} <span class="muted" style="font-weight:400;font-size:13px">${qs.filter((_,qi)=>S.iv[`q${gi}_${qi}`]).length}/${qs.length}</span></h3>
+   ${qs.map((q,qi)=>{const id=`q${gi}_${qi}`,c=!!S.iv[id];return `<div class="task ${c?"done":""}"><input type="checkbox" id="${id}" data-iv="${id}" ${c?"checked":""}><label for="${id}">${esc(q)}</label></div>`}).join("")}</div>`).join("");
+}
+
+function renderAll(){renderDash();renderRoad();renderSkills();renderLog();renderIV();}
+
+// events
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.dataset.id){S.done[t.dataset.id]=t.checked;save();renderDash();renderRoad();}
+  else if(t.dataset.iv){S.iv[t.dataset.iv]=t.checked;save();renderIV();renderDash();}
+  else if(t.id==="start"){S.start=t.value;save();renderAll();}
+  else if(t.id==="weekly"){S.weekly=Math.max(1,+t.value||12);save();renderAll();}
+});
+document.addEventListener("input",e=>{
+  const t=e.target;
+  if(t.dataset.sk){S.skills[t.dataset.sk]=+t.value;$("#lv-"+t.dataset.sk).textContent=t.value+" / 5";save();renderDash();}
+  else if(t.dataset.note!==undefined){S.notes[t.dataset.note]=t.value;save();}
+});
+document.addEventListener("click",e=>{
+  const t=e.target;
+  if(t.dataset.tab){document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("active",b===t));
+    document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===t.dataset.tab));}
+  if(t.dataset.del){S.log=S.log.filter(x=>x.id!==t.dataset.del);save();renderLog();renderDash();}
+});
+$("#snapBtn").onclick=()=>{const r={};SKILLS.forEach(([k])=>r[k]=S.skills[k]||0);
+  const date=new Date().toISOString().slice(0,10); S.snaps=S.snaps.filter(s=>s.date!==date); S.snaps.push({date,r}); save(); renderSkills();};
+$("#logAdd").onclick=()=>{const date=$("#logDate").value,h=parseFloat($("#logHours").value);
+  if(!date||isNaN(h))return alert("Enter a date and the number of hours.");
+  S.log.push({id:Date.now().toString(36),date,hours:h,note:$("#logNote").value.trim()});
+  $("#logHours").value="";$("#logNote").value="";save();renderLog();renderDash();};
+$("#exportBtn").onclick=()=>{const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:"application/json"}));
+  a.download=`cyber-roadmap-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();};
+$("#importBtn").onclick=()=>$("#importFile").click();
+$("#importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+  rd.onload=()=>{try{S=Object.assign(blank(),JSON.parse(rd.result));save();init();}catch(err){alert("That file isn't a valid backup.");}};rd.readAsText(f);};
+$("#themeBtn").onclick=()=>{const dark=matchMedia("(prefers-color-scheme: dark)").matches;
+  const cur=S.theme||(dark?"dark":"light");S.theme=cur==="dark"?"light":"dark";document.documentElement.dataset.theme=S.theme;save();};
+
+function init(){
+  if(S.theme)document.documentElement.dataset.theme=S.theme;
+  $("#start").value=S.start;$("#weekly").value=S.weekly;$("#logDate").value=new Date().toISOString().slice(0,10);
+  renderAll();
+}
+init();
+</script>
+</body>
+</html>
