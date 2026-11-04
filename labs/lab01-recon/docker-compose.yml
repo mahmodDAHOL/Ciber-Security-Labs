@@ -1,0 +1,58 @@
+name: lab01
+
+networks:
+  labnet:
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24
+
+volumes:
+  secrets:
+
+services:
+  attacker:
+    build: ./attacker
+    container_name: lab01-attacker
+    hostname: attacker
+    cap_add: [NET_RAW, NET_ADMIN]
+    networks:
+      labnet:
+        ipv4_address: 10.10.10.5
+
+  web:
+    build: ./web
+    container_name: lab01-web
+    hostname: web01
+    networks:
+      labnet:
+        ipv4_address: 10.10.10.20
+
+  ftp:
+    build: ./ftp
+    container_name: lab01-ftp
+    hostname: ftp01
+    networks:
+      labnet:
+        ipv4_address: 10.10.10.30
+
+  intranet:
+    build: ./intranet
+    container_name: lab01-intranet
+    hostname: intranet
+    volumes:
+      - secrets:/secrets
+    networks:
+      labnet:
+        ipv4_address: 10.10.10.50
+
+  ws01:
+    build: ./ws01
+    container_name: lab01-ws01
+    hostname: ws01
+    cap_add: [NET_RAW, NET_ADMIN]
+    depends_on: [intranet]
+    volumes:
+      - secrets:/secrets
+    networks:
+      labnet:
+        ipv4_address: 10.10.10.40
