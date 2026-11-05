@@ -15,8 +15,9 @@ submit flags and answers, and `check.py` checks them against the running lab and
 | Lab | Topic | Phase | Status |
 |-----|-------|-------|--------|
 | [01](lab01-recon/README.md) | Network recon, anonymous FTP, sniffing cleartext credentials | 1 | Done 12/12 · report written (add Wireshark screenshot) · interview Qs pending |
+| [02](lab02-linux-harden/README.md) | SSH brute force, sudo privilege escalation, then harden the server | 1 | Done 16/16 · report pending |
 
-Planned: Linux hardening (P1), TLS & crypto (P1), SIEM with Wazuh (P2), log investigation (P2),
+Planned: TLS & crypto (P1), SIEM with Wazuh (P2), log investigation (P2),
 OWASP Top 10 web app (P3), privilege escalation (P3), ERPNext pentest (P3), AD lab (P4), and more.
 
 ## Rules
