@@ -74,6 +74,13 @@ def shadow_private(_):
     return docker_exec("lab02-srv01", "stat", "-c", "%a", "/etc/shadow")[-1] == "0"
 
 
+def hash_is(*accepted):
+    def check(answer):
+        a = answer.lower().replace("-", "").replace(" ", "").replace("_", "")
+        return a in accepted
+    return check
+
+
 # lab id -> (title, roadmap phase, {task id: (description, checker, points)})
 LABS = {
     "01": ("Network Recon & Cleartext Protocols", 1, {
@@ -95,11 +102,20 @@ LABS = {
         "8": ("Harden: dangerous sudo rule removed", sudo_find_removed, 2),
         "9": ("Harden: /etc/shadow not world-readable", shadow_private, 1),
     }),
+    "03": ("Cryptography: Hashing, Cracking & TLS/PKI", 1, {
+        "1": ("Identify the hash type in hashes.txt ($6$)", hash_is("sha512crypt", "sha512", "crypt"), 1),
+        "2": ("Identify a 32-hex-char hash", hash_is("md5"), 1),
+        "3": ("Cracked admin's password", flag_in("lab03-intranet", "/root/.lab/admin_pw"), 3),
+        "4": ("Cracked svc-backup's password", flag_in("lab03-intranet", "/root/.lab/svc_pw"), 2),
+        "5": ("Flag hidden in the intranet's self-signed cert", flag_in("lab03-intranet", "/flag"), 2),
+        "6": ("mTLS: client cert signed by the CA, API flag", flag_in("lab03-secure-api", "/flag"), 3),
+    }),
 }
 
 # Roadmap tracker task ids (p<phase index>t<task index>, 0-based) ticked when a lab is fully solved
 ROADMAP = {
     "02": ["p0t7"],  # Phase 1: Harden a Linux server
+    "03": ["p0t4"],  # Phase 1: Cryptography (hashing, PKI, certificates)
 }
 
 

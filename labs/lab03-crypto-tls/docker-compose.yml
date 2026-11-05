@@ -1,0 +1,46 @@
+name: lab03
+
+networks:
+  labnet:
+    ipam:
+      config:
+        - subnet: 10.10.30.0/24
+
+volumes:
+  pki:
+  loot:
+
+services:
+  attacker:
+    build: {context: ., dockerfile: attacker/Dockerfile}
+    container_name: lab03-attacker
+    hostname: attacker
+    cap_add: [NET_RAW, NET_ADMIN]
+    volumes:
+      - pki:/mnt/pki:ro
+      - loot:/mnt/loot:ro
+    networks:
+      labnet:
+        ipv4_address: 10.10.30.5
+
+  intranet:
+    build: {context: ., dockerfile: intranet/Dockerfile}
+    container_name: lab03-intranet
+    hostname: intranet
+    volumes:
+      - pki:/pki
+      - loot:/loot
+    networks:
+      labnet:
+        ipv4_address: 10.10.30.20
+
+  secure-api:
+    build: {context: ., dockerfile: secure-api/Dockerfile}
+    container_name: lab03-secure-api
+    hostname: secure-api
+    depends_on: [intranet]
+    volumes:
+      - pki:/pki:ro
+    networks:
+      labnet:
+        ipv4_address: 10.10.30.40

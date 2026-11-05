@@ -19,12 +19,23 @@ window.LAB_PROGRESS = {
       "done": 9,
       "tasks": 9,
       "last": "2026-11-04 18:05"
+    },
+    {
+      "id": "03",
+      "title": "Cryptography: Hashing, Cracking & TLS/PKI",
+      "phase": 1,
+      "score": 12,
+      "max": 12,
+      "done": 6,
+      "tasks": 6,
+      "last": "2026-11-05 21:56"
     }
   ],
-  "score": 28,
-  "max": 28,
+  "score": 40,
+  "max": 40,
   "roadmap": [
-    "p0t7"
+    "p0t7",
+    "p0t4"
   ],
-  "updated": "2026-11-05 12:34"
+  "updated": "2026-11-05 21:56"
 };
