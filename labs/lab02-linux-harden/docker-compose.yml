@@ -1,0 +1,25 @@
+name: lab02
+
+networks:
+  labnet:
+    ipam:
+      config:
+        - subnet: 10.10.20.0/24
+
+services:
+  attacker:
+    build: {context: ., dockerfile: attacker/Dockerfile}
+    container_name: lab02-attacker
+    hostname: attacker
+    cap_add: [NET_RAW, NET_ADMIN]
+    networks:
+      labnet:
+        ipv4_address: 10.10.20.5
+
+  srv01:
+    build: {context: ., dockerfile: srv01/Dockerfile}
+    container_name: lab02-srv01
+    hostname: srv01
+    networks:
+      labnet:
+        ipv4_address: 10.10.20.10

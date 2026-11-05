@@ -129,6 +129,8 @@ ul.plain li{margin:4px 0}
 <!-- DASHBOARD -->
 <section class="panel active" id="dash">
   <div class="grid kpis" id="kpis"></div>
+  <h2>Hands-on labs</h2>
+  <div class="card" style="overflow-x:auto"><table id="labTable"></table></div>
   <h2>Phase progress</h2>
   <div class="card" id="phaseBars"></div>
   <h2>Up next</h2>
@@ -232,6 +234,8 @@ ul.plain li{margin:4px 0}
 </section>
 </div>
 
+<!-- Written by labs/check.py whenever a lab answer is graded -->
+<script src="labs/progress.js"></script>
 <script>
 const PHASES = [
  {title:"Networking & Security Foundations", months:[1,3],
@@ -392,6 +396,7 @@ const IV = {
   "Tell me about a mistake and what you changed afterward"]
 };
 
+const LP=window.LAB_PROGRESS||null;
 const KEY="cyberplan.v1";
 const blank = ()=>({start:new Date().toISOString().slice(0,10),weekly:12,done:{},notes:{},skills:{},snaps:[],log:[],iv:{},theme:null});
 let S = blank();
@@ -433,7 +438,12 @@ function renderDash(){
    <div class="card kpi"><div class="label">Tasks completed</div><div class="value">${o.d} / ${o.n}</div><div class="sub">Weighted by points</div></div>
    <div class="card kpi"><div class="label">Hours logged</div><div class="value">${hrs.toFixed(0)}</div><div class="sub">Target ≈ ${Math.round(S.weekly*104)} h over 2 years</div></div>
    <div class="card kpi"><div class="label">Avg skill level</div><div class="value">${avgSk.toFixed(1)} / 5</div><div class="sub">Job-ready ≈ 3.0+</div></div>
-   <div class="card kpi"><div class="label">Interview readiness</div><div class="value">${ivN?Math.round(ivD/ivN*100):0}%</div><div class="sub">${ivD} / ${ivN} questions</div></div>`;
+   <div class="card kpi"><div class="label">Interview readiness</div><div class="value">${ivN?Math.round(ivD/ivN*100):0}%</div><div class="sub">${ivD} / ${ivN} questions</div></div>
+   <div class="card kpi"><div class="label">Lab points</div><div class="value">${LP?LP.score+" / "+LP.max:"–"}</div><div class="sub">${LP?LP.labs.filter(l=>l.done===l.tasks).length+" of "+LP.labs.length+" labs complete":"No lab data found"}</div></div>`;
+  $("#labTable").innerHTML=LP?"<tr><th>Lab</th><th>Phase</th><th>Score</th><th>Tasks</th><th>Last solve</th></tr>"+LP.labs.map(l=>{
+    const pct=l.score/l.max*100;
+    return `<tr><td>${esc(l.id)} · ${esc(l.title)}</td><td>P${l.phase}</td><td><div class="bar" style="min-width:80px"><span style="width:${pct}%"></span></div><span class="muted" style="font-size:13px">${l.score}/${l.max}</span></td><td><span class="pill ${l.done===l.tasks?"good":l.done?"warn":"neutral"}">${l.done}/${l.tasks}</span></td><td class="muted">${esc(l.last||"–")}</td></tr>`}).join("")+`<tr><td colspan="5" class="muted" style="font-size:13px">Synced from labs/progress.js · updated ${esc(LP.updated)}</td></tr>`
+    :"<tr><td class='muted'>Lab results appear here after the first answer is graded with labs/check.py.</td></tr>";
   $("#phaseBars").innerHTML=PHASES.map((p,i)=>{const s=phaseStats(i);
     return `<div style="margin:10px 0"><div class="row" style="justify-content:space-between"><span><b>P${i+1}</b> ${esc(p.title)} <span class="muted">· M${p.months[0]}–${p.months[1]}</span>${i===cp?' <span class="pill neutral">now</span>':''}</span><span class="muted">${s.pct.toFixed(0)}%</span></div><div class="bar"><span style="width:${s.pct}%"></span></div></div>`}).join("");
   const next=[]; PHASES.forEach((p,i)=>p.tasks.forEach((t,j)=>{if(!S.done[tid(i,j)]&&next.length<5)next.push([i,j,t]);}));
@@ -525,8 +535,17 @@ $("#importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=ne
 $("#themeBtn").onclick=()=>{const dark=matchMedia("(prefers-color-scheme: dark)").matches;
   const cur=S.theme||(dark?"dark":"light");S.theme=cur==="dark"?"light":"dark";document.documentElement.dataset.theme=S.theme;save();};
 
+function syncLabs(){
+  // Tick roadmap tasks for completed labs once; remembered so an untick by hand sticks
+  if(!LP)return;
+  S.labTicked=S.labTicked||{};
+  LP.roadmap.forEach(id=>{if(!S.labTicked[id]){S.done[id]=true;S.labTicked[id]=true;}});
+  save();
+}
+
 function init(){
   if(S.theme)document.documentElement.dataset.theme=S.theme;
+  syncLabs();
   $("#start").value=S.start;$("#weekly").value=S.weekly;$("#logDate").value=new Date().toISOString().slice(0,10);
   renderAll();
 }
