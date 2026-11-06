@@ -1,0 +1,10 @@
+id: SOC-001
+title: SSH Brute Force
+level: high
+mitre: [T1110]
+match:
+  event_type: failed_login
+threshold:
+  count: 5
+  by: source_ip
+  window: 60

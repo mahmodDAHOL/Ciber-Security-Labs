@@ -1,0 +1,42 @@
+name: lab04
+
+networks:
+  labnet:
+    ipam:
+      config:
+        - subnet: 10.10.40.0/24
+
+volumes:
+  logs:
+
+services:
+  siem:
+    build: {context: ., dockerfile: siem/Dockerfile}
+    container_name: lab04-siem
+    hostname: siem
+    ports:
+      - "8080:8080"          # dashboard at http://localhost:8080
+    volumes:
+      - logs:/logs:ro
+    networks:
+      labnet:
+        ipv4_address: 10.10.40.10
+
+  victim:
+    build: {context: ., dockerfile: victim/Dockerfile}
+    container_name: lab04-victim
+    hostname: victim
+    volumes:
+      - logs:/logs
+    networks:
+      labnet:
+        ipv4_address: 10.10.40.20
+
+  attacker:
+    build: {context: ., dockerfile: attacker/Dockerfile}
+    container_name: lab04-attacker
+    hostname: attacker
+    depends_on: [victim]
+    networks:
+      labnet:
+        ipv4_address: 10.10.40.5

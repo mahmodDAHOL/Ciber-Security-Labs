@@ -29,13 +29,25 @@ window.LAB_PROGRESS = {
       "done": 6,
       "tasks": 6,
       "last": "2026-11-05 21:56"
+    },
+    {
+      "id": "04",
+      "title": "Build a SOC: SIEM Detection & Triage",
+      "phase": 2,
+      "score": 12,
+      "max": 12,
+      "done": 6,
+      "tasks": 6,
+      "last": "2026-11-06 23:11"
     }
   ],
-  "score": 40,
-  "max": 40,
+  "score": 52,
+  "max": 52,
   "roadmap": [
     "p0t7",
-    "p0t4"
+    "p0t4",
+    "p1t0",
+    "p1t1"
   ],
-  "updated": "2026-11-05 21:56"
+  "updated": "2026-11-06 23:11"
 };

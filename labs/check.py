@@ -74,6 +74,48 @@ def shadow_private(_):
     return docker_exec("lab02-srv01", "stat", "-c", "%a", "/etc/shadow")[-1] == "0"
 
 
+import time as _time
+
+
+def lab04_alerts():
+    out = run("lab04-siem", "cat", "/opt/soc/alerts.jsonl").stdout
+    alerts = []
+    for line in out.splitlines():
+        line = line.strip()
+        if line:
+            try:
+                alerts.append(json.loads(line))
+            except ValueError:
+                pass
+    return alerts
+
+
+def lab04_replay_then(predicate):
+    """Replay the intrusion, then check a new custom alert satisfies predicate."""
+    marker = run("lab04-siem", "date", "-u", "+%Y-%m-%dT%H:%M:%SZ").stdout.strip()
+    run("lab04-attacker", "sh", "/root/attack.sh")
+    for _ in range(12):
+        _time.sleep(2)
+        fresh = [a for a in lab04_alerts()
+                 if a.get("source") == "custom" and a.get("detected_at", "") >= marker]
+        if any(predicate(a) for a in fresh):
+            return True
+    return False
+
+
+def custom_accepted_login(_):
+    return lab04_replay_then(lambda a: a.get("event_type") == "accepted_login")
+
+
+def custom_sudo(_):
+    return lab04_replay_then(lambda a: a.get("event_type") == "sudo")
+
+
+def custom_bruteforce_threshold(_):
+    return lab04_replay_then(lambda a: a.get("event_type") == "failed_login"
+                             and isinstance(a.get("count"), int) and a["count"] >= 10)
+
+
 def hash_is(*accepted):
     def check(answer):
         a = answer.lower().replace("-", "").replace(" ", "").replace("_", "")
@@ -110,12 +152,21 @@ LABS = {
         "5": ("Flag hidden in the intranet's self-signed cert", flag_in("lab03-intranet", "/flag"), 2),
         "6": ("mTLS: client cert signed by the CA, API flag", flag_in("lab03-secure-api", "/flag"), 3),
     }),
+    "04": ("Build a SOC: SIEM Detection & Triage", 2, {
+        "1": ("Triage: source IP of the brute force", fixed("10.10.40.5"), 1),
+        "2": ("Triage: the compromised account", fixed("webadmin"), 2),
+        "3": ("ATT&CK technique for SSH brute force", hash_is("t1110", "t1110.001"), 1),
+        "4": ("Detection rule fires on a successful SSH login", custom_accepted_login, 3),
+        "5": ("Detection rule fires on sudo privilege escalation", custom_sudo, 3),
+        "6": ("Your own brute-force threshold rule (>=10 in window)", custom_bruteforce_threshold, 2),
+    }),
 }
 
 # Roadmap tracker task ids (p<phase index>t<task index>, 0-based) ticked when a lab is fully solved
 ROADMAP = {
     "02": ["p0t7"],  # Phase 1: Harden a Linux server
     "03": ["p0t4"],  # Phase 1: Cryptography (hashing, PKI, certificates)
+    "04": ["p1t0", "p1t1"],  # Phase 2: log sources + ATT&CK/Kill Chain frameworks
 }
 
 
