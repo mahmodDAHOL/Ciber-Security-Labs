@@ -123,6 +123,25 @@ def hash_is(*accepted):
     return check
 
 
+def lab05_key():
+    return json.loads(docker_exec("lab05-evidence", "cat", "/root/.answers.json"))
+
+
+def key_equals(field):
+    def check(answer):
+        return answer.strip().lower() == lab05_key()[field].strip().lower()
+    return check
+
+
+def key_path(field):
+    # Accept the full path or just the file's basename, with or without a leading slash
+    def check(answer):
+        want = lab05_key()[field].strip().lower()
+        a = answer.strip().lower().lstrip("/")
+        return a == want.lstrip("/") or a == want.rsplit("/", 1)[-1]
+    return check
+
+
 # lab id -> (title, roadmap phase, {task id: (description, checker, points)})
 LABS = {
     "01": ("Network Recon & Cleartext Protocols", 1, {
@@ -160,6 +179,15 @@ LABS = {
         "5": ("Detection rule fires on sudo privilege escalation", custom_sudo, 3),
         "6": ("Your own brute-force threshold rule (>=10 in window)", custom_bruteforce_threshold, 2),
     }),
+    "05": ("Threat Hunt: Reconstruct a Web Intrusion", 2, {
+        "1": ("Attacker's source IP (recon + exploit)", key_equals("attacker_ip"), 2),
+        "2": ("Path of the uploaded web shell", key_path("webshell_path"), 2),
+        "3": ("Sensitive file read through the web shell", key_path("secret_file"), 2),
+        "4": ("Persistence account the attacker created", key_equals("persist_user"), 2),
+        "5": ("Exfiltration destination IP", key_equals("exfil_ip"), 2),
+        "6": ("ATT&CK technique for the web shell", hash_is("t1505.003", "t1505"), 1),
+        "7": ("ATT&CK technique for data exfiltration", hash_is("t1041"), 1),
+    }),
 }
 
 # Roadmap tracker task ids (p<phase index>t<task index>, 0-based) ticked when a lab is fully solved
@@ -167,6 +195,7 @@ ROADMAP = {
     "02": ["p0t7"],  # Phase 1: Harden a Linux server
     "03": ["p0t4"],  # Phase 1: Cryptography (hashing, PKI, certificates)
     "04": ["p1t0", "p1t1"],  # Phase 2: log sources + ATT&CK/Kill Chain frameworks
+    "05": ["p1t5"],  # Phase 2: Incident response lifecycle / triage
 }
 
 

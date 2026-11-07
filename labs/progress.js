@@ -39,15 +39,26 @@ window.LAB_PROGRESS = {
       "done": 6,
       "tasks": 6,
       "last": "2026-11-06 23:11"
+    },
+    {
+      "id": "05",
+      "title": "Threat Hunt: Reconstruct a Web Intrusion",
+      "phase": 2,
+      "score": 12,
+      "max": 12,
+      "done": 7,
+      "tasks": 7,
+      "last": "2026-11-07 18:12"
     }
   ],
-  "score": 52,
-  "max": 52,
+  "score": 64,
+  "max": 64,
   "roadmap": [
     "p0t7",
     "p0t4",
     "p1t0",
-    "p1t1"
+    "p1t1",
+    "p1t5"
   ],
-  "updated": "2026-11-06 23:11"
+  "updated": "2026-11-07 18:12"
 };

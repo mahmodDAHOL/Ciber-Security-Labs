@@ -1,0 +1,32 @@
+name: lab05
+
+networks:
+  labnet:
+    ipam:
+      config:
+        - subnet: 10.10.50.0/24
+
+volumes:
+  cases:
+
+services:
+  evidence:
+    build: {context: ., dockerfile: evidence/Dockerfile}
+    container_name: lab05-evidence
+    hostname: evidence
+    volumes:
+      - cases:/cases
+    networks:
+      labnet:
+        ipv4_address: 10.10.50.10
+
+  analyst:
+    build: {context: ., dockerfile: analyst/Dockerfile}
+    container_name: lab05-analyst
+    hostname: analyst
+    depends_on: [evidence]
+    volumes:
+      - cases:/cases:ro
+    networks:
+      labnet:
+        ipv4_address: 10.10.50.5

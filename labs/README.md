@@ -15,12 +15,12 @@ submit flags and answers, and `check.py` checks them against the running lab and
 | Lab | Topic | Phase | Status |
 |-----|-------|-------|--------|
 | [01](lab01-recon/README.md) | Network recon, anonymous FTP, sniffing cleartext credentials | 1 | Done 12/12 · report written (add Wireshark screenshot) · interview Qs pending |
-| [02](lab02-linux-harden/README.md) | SSH brute force, sudo privilege escalation, then harden the server | 1 | Done 16/16 · report pending |
-| [03](lab03-crypto-tls/README.md) | Password cracking (John), TLS cert inspection, building a CA, mutual TLS | 1 | Done 12/12 · report pending |
-| [04](lab04-soc/README.md) | Build a mini-SOC: SIEM log pipeline, detection-as-code, ATT&CK triage | 2 | Done 12/12 · report pending |
+| [02](lab02-linux-harden/README.md) | SSH brute force, sudo privilege escalation, then harden the server | 1 | Done 16/16 · report written |
+| [03](lab03-crypto-tls/README.md) | Password cracking (John), TLS cert inspection, building a CA, mutual TLS | 1 | Done 12/12 · report written |
+| [04](lab04-soc/README.md) | Build a mini-SOC: SIEM log pipeline, detection-as-code, ATT&CK triage | 2 | Done 12/12 · report written |
+| [05](lab05-threat-hunt/README.md) | Threat hunt: reconstruct a multi-stage web intrusion from noisy logs | 2 | Done 12/12 · report written |
 
-Planned: log investigation deep-dive (P2), log investigation (P2),
-OWASP Top 10 web app (P3), privilege escalation (P3), ERPNext pentest (P3), AD lab (P4), and more.
+Planned: OWASP Top 10 web app (P3), privilege escalation (P3), ERPNext pentest (P3), Active Directory (P4), and more.
 
 ## Rules
 - Attack only these lab containers, or platforms that authorize it (TryHackMe, HTB, PortSwigger).
