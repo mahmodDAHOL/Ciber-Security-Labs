@@ -1,0 +1,27 @@
+name: lab06
+
+networks:
+  labnet:
+    ipam:
+      config:
+        - subnet: 10.10.60.0/24
+
+services:
+  web:
+    build: {context: ., dockerfile: web/Dockerfile}
+    container_name: lab06-web
+    hostname: web
+    ports:
+      - "8081:80"            # open http://localhost:8081 in your browser / Burp
+    networks:
+      labnet:
+        ipv4_address: 10.10.60.20
+
+  attacker:
+    build: {context: ., dockerfile: attacker/Dockerfile}
+    container_name: lab06-attacker
+    hostname: attacker
+    depends_on: [web]
+    networks:
+      labnet:
+        ipv4_address: 10.10.60.5

@@ -19,8 +19,9 @@ submit flags and answers, and `check.py` checks them against the running lab and
 | [03](lab03-crypto-tls/README.md) | Password cracking (John), TLS cert inspection, building a CA, mutual TLS | 1 | Done 12/12 · report written |
 | [04](lab04-soc/README.md) | Build a mini-SOC: SIEM log pipeline, detection-as-code, ATT&CK triage | 2 | Done 12/12 · report written |
 | [05](lab05-threat-hunt/README.md) | Threat hunt: reconstruct a multi-stage web intrusion from noisy logs | 2 | Done 12/12 · report written |
+| [06](lab06-web-owasp/README.md) | Web app hacking: SQLi, IDOR, command injection, path traversal (OWASP Top 10) | 3 | Done 12/12 · report pending |
 
-Planned: OWASP Top 10 web app (P3), privilege escalation (P3), ERPNext pentest (P3), Active Directory (P4), and more.
+Planned: privilege escalation (P3), ERPNext pentest (P3), Active Directory (P4), and more.
 
 ## Rules
 - Attack only these lab containers, or platforms that authorize it (TryHackMe, HTB, PortSwigger).

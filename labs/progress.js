@@ -49,16 +49,27 @@ window.LAB_PROGRESS = {
       "done": 7,
       "tasks": 7,
       "last": "2026-11-07 18:12"
+    },
+    {
+      "id": "06",
+      "title": "Web App Hacking: OWASP Top 10",
+      "phase": 3,
+      "score": 12,
+      "max": 12,
+      "done": 6,
+      "tasks": 6,
+      "last": "2026-11-08 13:00"
     }
   ],
-  "score": 64,
-  "max": 64,
+  "score": 76,
+  "max": 76,
   "roadmap": [
     "p0t7",
     "p0t4",
     "p1t0",
     "p1t1",
-    "p1t5"
+    "p1t5",
+    "p2t2"
   ],
-  "updated": "2026-11-07 18:12"
+  "updated": "2026-11-08 13:15"
 };

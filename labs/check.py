@@ -188,6 +188,14 @@ LABS = {
         "6": ("ATT&CK technique for the web shell", hash_is("t1505.003", "t1505"), 1),
         "7": ("ATT&CK technique for data exfiltration", hash_is("t1041"), 1),
     }),
+    "06": ("Web App Hacking: OWASP Top 10", 3, {
+        "1": ("SQLi auth bypass -> admin flag", flag_in("lab06-web", "/srv/flags/sqli_login.txt"), 2),
+        "2": ("SQLi UNION -> secret flag from DB", flag_in("lab06-web", "/srv/flags/sqli_union.txt"), 3),
+        "3": ("Broken access control (IDOR) -> other user's flag", flag_in("lab06-web", "/srv/flags/idor.txt"), 2),
+        "4": ("OS command injection -> flag", flag_in("lab06-web", "/srv/flags/cmdinj.txt"), 3),
+        "5": ("Path traversal -> flag", flag_in("lab06-web", "/srv/flags/lfi.txt"), 1),
+        "6": ("OWASP Top 10 2021 category for injection", hash_is("a03", "a032021", "a03:2021"), 1),
+    }),
 }
 
 # Roadmap tracker task ids (p<phase index>t<task index>, 0-based) ticked when a lab is fully solved
@@ -196,6 +204,7 @@ ROADMAP = {
     "03": ["p0t4"],  # Phase 1: Cryptography (hashing, PKI, certificates)
     "04": ["p1t0", "p1t1"],  # Phase 2: log sources + ATT&CK/Kill Chain frameworks
     "05": ["p1t5"],  # Phase 2: Incident response lifecycle / triage
+    "06": ["p2t2"],  # Phase 3: OWASP Top 10
 }
 
 
