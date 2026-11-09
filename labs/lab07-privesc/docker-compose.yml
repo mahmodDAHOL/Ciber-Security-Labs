@@ -1,0 +1,22 @@
+name: lab07-privesc
+
+services:
+  target:
+    build: ./target
+    container_name: lab07-target
+    hostname: app-server
+    ports:
+      - "2207:22"      # SSH foothold: ssh webdev@localhost -p 2207
+    networks:
+      labnet:
+        ipv4_address: 10.10.70.10
+    # privesc vectors need a real init for cron + setcap; keep it simple and privileged-free
+    cap_add:
+      - SETFCAP        # so entrypoint can grant file capabilities (the lab's point)
+
+networks:
+  labnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.70.0/24

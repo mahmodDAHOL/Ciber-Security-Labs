@@ -59,17 +59,28 @@ window.LAB_PROGRESS = {
       "done": 6,
       "tasks": 6,
       "last": "2026-11-08 13:00"
+    },
+    {
+      "id": "07",
+      "title": "Linux Privilege Escalation",
+      "phase": 3,
+      "score": 14,
+      "max": 14,
+      "done": 6,
+      "tasks": 6,
+      "last": "2026-11-09 15:57"
     }
   ],
-  "score": 76,
-  "max": 76,
+  "score": 90,
+  "max": 90,
   "roadmap": [
     "p0t7",
     "p0t4",
     "p1t0",
     "p1t1",
     "p1t5",
-    "p2t2"
+    "p2t2",
+    "p2t5"
   ],
-  "updated": "2026-11-08 13:15"
+  "updated": "2026-11-09 15:57"
 };

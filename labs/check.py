@@ -196,6 +196,14 @@ LABS = {
         "5": ("Path traversal -> flag", flag_in("lab06-web", "/srv/flags/lfi.txt"), 1),
         "6": ("OWASP Top 10 2021 category for injection", hash_is("a03", "a032021", "a03:2021"), 1),
     }),
+    "07": ("Linux Privilege Escalation", 3, {
+        "1": ("Enumerate: the odd-one-out SUID binary", fixed("/usr/bin/find", "find", "/bin/find"), 1),
+        "2": ("SUID privesc -> root flag", flag_in("lab07-target", "/root/flags/suid.txt"), 3),
+        "3": ("sudo (GTFOBins) privesc -> root flag", flag_in("lab07-target", "/root/flags/sudo.txt"), 3),
+        "4": ("Cron world-writable script -> root flag", flag_in("lab07-target", "/root/flags/cron.txt"), 3),
+        "5": ("Linux capability (cap_setuid) -> root flag", flag_in("lab07-target", "/root/flags/caps.txt"), 3),
+        "6": ("ATT&CK technique for SUID/SGID abuse", hash_is("t1548.001", "t1548001"), 1),
+    }),
 }
 
 # Roadmap tracker task ids (p<phase index>t<task index>, 0-based) ticked when a lab is fully solved
@@ -205,6 +213,7 @@ ROADMAP = {
     "04": ["p1t0", "p1t1"],  # Phase 2: log sources + ATT&CK/Kill Chain frameworks
     "05": ["p1t5"],  # Phase 2: Incident response lifecycle / triage
     "06": ["p2t2"],  # Phase 3: OWASP Top 10
+    "07": ["p2t5"],  # Phase 3: Linux & Windows privilege escalation
 }
 
 

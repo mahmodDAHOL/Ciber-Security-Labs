@@ -20,8 +20,9 @@ submit flags and answers, and `check.py` checks them against the running lab and
 | [04](lab04-soc/README.md) | Build a mini-SOC: SIEM log pipeline, detection-as-code, ATT&CK triage | 2 | Done 12/12 · report written |
 | [05](lab05-threat-hunt/README.md) | Threat hunt: reconstruct a multi-stage web intrusion from noisy logs | 2 | Done 12/12 · report written |
 | [06](lab06-web-owasp/README.md) | Web app hacking: SQLi, IDOR, command injection, path traversal (OWASP Top 10) | 3 | Done 12/12 · report pending |
+| [07](lab07-privesc/README.md) | Linux privilege escalation: SUID, sudo/GTFOBins, cron, Linux capabilities | 3 | Done 14/14 · report drafted (add your notes) |
 
-Planned: privilege escalation (P3), ERPNext pentest (P3), Active Directory (P4), and more.
+Planned: ERPNext pentest (P3), Active Directory (P4), and more.
 
 ## Rules
 - Attack only these lab containers, or platforms that authorize it (TryHackMe, HTB, PortSwigger).
