@@ -127,6 +127,15 @@ def lab05_key():
     return json.loads(docker_exec("lab05-evidence", "cat", "/root/.answers.json"))
 
 
+def lab08_flags():
+    return json.loads(docker_exec("lab08-backend", "cat",
+                                  "/home/frappe/frappe-bench/sites/frontend/lab08_flags.json"))
+
+
+def lab08_flag(key):
+    return lambda answer: answer.strip() == lab08_flags().get(key, "\x00").strip()
+
+
 def key_equals(field):
     def check(answer):
         return answer.strip().lower() == lab05_key()[field].strip().lower()
@@ -204,6 +213,14 @@ LABS = {
         "5": ("Linux capability (cap_setuid) -> root flag", flag_in("lab07-target", "/root/flags/caps.txt"), 3),
         "6": ("ATT&CK technique for SUID/SGID abuse", hash_is("t1548.001", "t1548001"), 1),
     }),
+    "08": ("ERPNext / Frappe Penetration Test", 3, {
+        "1": ("Recon: ERPNext version", fixed("16.54.0", "16.54", "16"), 2),
+        "2": ("Default admin credentials -> admin secret flag", lab08_flag("admin"), 3),
+        "3": ("Unauthenticated guest Server Script -> flag", lab08_flag("guest"), 2),
+        "4": ("SQL injection in guest Server Script -> flag", lab08_flag("sqli"), 3),
+        "5": ("Broken object-level auth (IDOR) via REST -> flag", lab08_flag("bola"), 3),
+        "6": ("OWASP API Top 10 (2023) category for BOLA", hash_is("api1", "api1:2023", "api12023", "api012023"), 1),
+    }),
 }
 
 # Roadmap tracker task ids (p<phase index>t<task index>, 0-based) ticked when a lab is fully solved
@@ -214,6 +231,7 @@ ROADMAP = {
     "05": ["p1t5"],  # Phase 2: Incident response lifecycle / triage
     "06": ["p2t2"],  # Phase 3: OWASP Top 10
     "07": ["p2t5"],  # Phase 3: Linux & Windows privilege escalation
+    "08": ["p2t7"],  # Phase 3: Pentest a local ERPNext/Frappe instance (project)
 }
 
 

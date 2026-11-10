@@ -69,10 +69,20 @@ window.LAB_PROGRESS = {
       "done": 6,
       "tasks": 6,
       "last": "2026-11-09 15:57"
+    },
+    {
+      "id": "08",
+      "title": "ERPNext / Frappe Penetration Test",
+      "phase": 3,
+      "score": 14,
+      "max": 14,
+      "done": 6,
+      "tasks": 6,
+      "last": "2026-11-10 12:07"
     }
   ],
-  "score": 90,
-  "max": 90,
+  "score": 104,
+  "max": 104,
   "roadmap": [
     "p0t7",
     "p0t4",
@@ -80,7 +90,8 @@ window.LAB_PROGRESS = {
     "p1t1",
     "p1t5",
     "p2t2",
-    "p2t5"
+    "p2t5",
+    "p2t7"
   ],
-  "updated": "2026-11-09 15:57"
+  "updated": "2026-11-10 12:07"
 };
