@@ -1,0 +1,3 @@
+# Assistant/tooling local state — never track
+.claude/
+.copilot-assistant/
