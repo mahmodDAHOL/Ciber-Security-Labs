@@ -89,10 +89,20 @@ window.LAB_PROGRESS = {
       "done": 6,
       "tasks": 6,
       "last": "2026-11-12 12:27"
+    },
+    {
+      "id": "10",
+      "title": "Container Escape & Security",
+      "phase": 5,
+      "score": 14,
+      "max": 14,
+      "done": 6,
+      "tasks": 6,
+      "last": "2026-11-12 23:11"
     }
   ],
-  "score": 118,
-  "max": 118,
+  "score": 132,
+  "max": 132,
   "roadmap": [
     "p0t7",
     "p0t4",
@@ -102,7 +112,8 @@ window.LAB_PROGRESS = {
     "p2t2",
     "p2t5",
     "p2t7",
-    "p3t1"
+    "p3t1",
+    "p4t3"
   ],
-  "updated": "2026-11-12 12:28"
+  "updated": "2026-11-12 23:12"
 };

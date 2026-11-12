@@ -148,6 +148,14 @@ def lab09_field(field, ci=False):
     return check
 
 
+def lab10_flags():
+    return json.loads(docker_exec("lab10-victim", "cat", "/root/.lab10_answers.json"))
+
+
+def lab10_flag(key):
+    return lambda answer: answer.strip() == lab10_flags().get(key, "\x00").strip()
+
+
 def key_equals(field):
     def check(answer):
         return answer.strip().lower() == lab05_key()[field].strip().lower()
@@ -241,6 +249,14 @@ LABS = {
         "5": ("Attack-path recon: the AS-REP-roastable user", lab09_field("asrep_user", ci=True), 2),
         "6": ("ATT&CK sub-technique for Password Spraying", hash_is("t1110.003", "t1110003", "t1110"), 1),
     }),
+    "10": ("Container Escape & Security", 5, {
+        "1": ("Recon: the critical host mount inside the container", fixed("/var/run/docker.sock", "docker.sock", "/run/docker.sock", "var/run/docker.sock"), 2),
+        "2": ("Docker-socket escape to the host filesystem -> flag", lab10_flag("host_flag"), 5),
+        "3": ("Exposed secret in a container config file -> flag", lab10_flag("config_flag"), 2),
+        "4": ("Exposed secret in an environment variable -> flag", lab10_flag("env_flag"), 2),
+        "5": ("The run flag that gives the container full host privileges", fixed("privileged", "--privileged", "privileged mode"), 2),
+        "6": ("ATT&CK technique for Escape to Host", hash_is("t1611"), 1),
+    }),
 }
 
 # Roadmap tracker task ids (p<phase index>t<task index>, 0-based) ticked when a lab is fully solved
@@ -253,6 +269,7 @@ ROADMAP = {
     "07": ["p2t5"],  # Phase 3: Linux & Windows privilege escalation
     "08": ["p2t7"],  # Phase 3: Pentest a local ERPNext/Frappe instance (project)
     "09": ["p3t1"],  # Phase 4: Build & attack a vulnerable AD lab
+    "10": ["p4t3"],  # Phase 5: Docker security (capabilities, escapes, CIS)
 }
 
 
