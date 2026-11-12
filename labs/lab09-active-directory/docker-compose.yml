@@ -1,0 +1,38 @@
+name: lab09-ad
+
+services:
+  dc01:
+    build: ./dc
+    container_name: lab09-dc01
+    hostname: dc01
+    volumes:
+      - dc-data:/var/lib/samba        # ext4-backed: supports the security.NTACL xattrs overlayfs can't
+    cap_add:
+      - SYS_ADMIN                      # Samba needs this to write security.* namespace xattrs (NT ACLs)
+    networks:
+      labnet:
+        ipv4_address: 10.10.90.10
+    # Samba AD DC is happiest with a stable hostname + its own DNS; no host ports needed (attack from attacker box)
+
+  attacker:
+    build: ./attacker
+    container_name: lab09-attacker
+    hostname: kali
+    depends_on:
+      - dc01
+    dns:
+      - 10.10.90.10          # use the DC as DNS so northwind.local resolves (needed for Kerberos)
+    networks:
+      labnet:
+        ipv4_address: 10.10.90.20
+    command: ["sleep", "infinity"]
+
+volumes:
+  dc-data:
+
+networks:
+  labnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.90.0/24

@@ -22,8 +22,9 @@ submit flags and answers, and `check.py` checks them against the running lab and
 | [06](lab06-web-owasp/README.md) | Web app hacking: SQLi, IDOR, command injection, path traversal (OWASP Top 10) | 3 | Done 12/12 · report pending |
 | [07](lab07-privesc/README.md) | Linux privilege escalation: SUID, sudo/GTFOBins, cron, Linux capabilities | 3 | Done 14/14 · report drafted (add your notes) |
 | [08](lab08-erpnext-pentest/README.md) | ERPNext/Frappe pentest: default creds, guest API, SQLi, BOLA/IDOR (OWASP API Top 10) | 3 | Done 14/14 · report drafted (add your notes) |
+| [09](lab09-active-directory/README.md) | Active Directory: domain enumeration, password spraying, SMB/LDAP initial access | 4 | Done 14/14 · report pending |
 
-Planned: Active Directory (P4), cloud/container security (P5), and more.
+Planned: cloud/container security (P5), and more.
 
 ## Rules
 - Attack only these lab containers, or platforms that authorize it (TryHackMe, HTB, PortSwigger).

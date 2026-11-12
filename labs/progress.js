@@ -79,10 +79,20 @@ window.LAB_PROGRESS = {
       "done": 6,
       "tasks": 6,
       "last": "2026-11-10 12:07"
+    },
+    {
+      "id": "09",
+      "title": "Active Directory: Enumeration, Spraying & Initial Access",
+      "phase": 4,
+      "score": 14,
+      "max": 14,
+      "done": 6,
+      "tasks": 6,
+      "last": "2026-11-12 12:27"
     }
   ],
-  "score": 104,
-  "max": 104,
+  "score": 118,
+  "max": 118,
   "roadmap": [
     "p0t7",
     "p0t4",
@@ -91,7 +101,8 @@ window.LAB_PROGRESS = {
     "p1t5",
     "p2t2",
     "p2t5",
-    "p2t7"
+    "p2t7",
+    "p3t1"
   ],
-  "updated": "2026-11-10 12:07"
+  "updated": "2026-11-12 12:28"
 };

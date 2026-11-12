@@ -136,6 +136,18 @@ def lab08_flag(key):
     return lambda answer: answer.strip() == lab08_flags().get(key, "\x00").strip()
 
 
+def lab09_ans():
+    return json.loads(docker_exec("lab09-dc01", "cat", "/var/lib/samba/.lab09_answers.json"))
+
+
+def lab09_field(field, ci=False):
+    def check(answer):
+        want = lab09_ans().get(field, "\x00")
+        a, w = answer.strip(), want.strip()
+        return a.lower() == w.lower() if ci else a == w
+    return check
+
+
 def key_equals(field):
     def check(answer):
         return answer.strip().lower() == lab05_key()[field].strip().lower()
@@ -221,6 +233,14 @@ LABS = {
         "5": ("Broken object-level auth (IDOR) via REST -> flag", lab08_flag("bola"), 3),
         "6": ("OWASP API Top 10 (2023) category for BOLA", hash_is("api1", "api1:2023", "api12023", "api012023"), 1),
     }),
+    "09": ("Active Directory: Enumeration, Spraying & Initial Access", 4, {
+        "1": ("Unauth enumeration: the service account's username", lab09_field("svc_user", ci=True), 2),
+        "2": ("Password spraying: the user with the weak reused password", lab09_field("spray_user", ci=True), 3),
+        "3": ("SMB share loot with recovered creds -> flag", lab09_field("loot_flag"), 3),
+        "4": ("Secret stashed in an LDAP description attribute -> flag", lab09_field("desc_flag"), 3),
+        "5": ("Attack-path recon: the AS-REP-roastable user", lab09_field("asrep_user", ci=True), 2),
+        "6": ("ATT&CK sub-technique for Password Spraying", hash_is("t1110.003", "t1110003", "t1110"), 1),
+    }),
 }
 
 # Roadmap tracker task ids (p<phase index>t<task index>, 0-based) ticked when a lab is fully solved
@@ -232,6 +252,7 @@ ROADMAP = {
     "06": ["p2t2"],  # Phase 3: OWASP Top 10
     "07": ["p2t5"],  # Phase 3: Linux & Windows privilege escalation
     "08": ["p2t7"],  # Phase 3: Pentest a local ERPNext/Frappe instance (project)
+    "09": ["p3t1"],  # Phase 4: Build & attack a vulnerable AD lab
 }
 
 
