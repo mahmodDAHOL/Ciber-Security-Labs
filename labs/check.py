@@ -156,6 +156,14 @@ def lab10_flag(key):
     return lambda answer: answer.strip() == lab10_flags().get(key, "\x00").strip()
 
 
+def lab11_ans():
+    return json.loads(docker_exec("lab11-scanner", "cat", "/opt/.lab11_answers.json"))
+
+
+def lab11_secret(key):
+    return lambda answer: answer.strip() == lab11_ans().get(key, "\x00").strip()
+
+
 def key_equals(field):
     def check(answer):
         return answer.strip().lower() == lab05_key()[field].strip().lower()
@@ -257,6 +265,14 @@ LABS = {
         "5": ("The run flag that gives the container full host privileges", fixed("privileged", "--privileged", "privileged mode"), 2),
         "6": ("ATT&CK technique for Escape to Host", hash_is("t1611"), 1),
     }),
+    "11": ("DevSecOps: SAST, Secret Scanning & Dependency Analysis", 6, {
+        "1": ("SAST: Bandit test ID for the subprocess shell=True call", fixed("b602", "b605"), 2),
+        "2": ("Hardcoded secret in the current source code", lab11_secret("code_secret"), 3),
+        "3": ("Secret removed from code but still in git history", lab11_secret("history_secret"), 3),
+        "4": ("Vulnerable dependency behind the unsafe yaml.load", fixed("pyyaml", "py-yaml", "pyyaml==5.1"), 3),
+        "5": ("Manual review: the insecure deserialization vuln (function/CWE)", hash_is("pickle", "pickleloads", "deserialization", "insecuredeserialization", "cwe502"), 2),
+        "6": ("What does SAST stand for?", hash_is("staticapplicationsecuritytesting", "sast"), 1),
+    }),
 }
 
 # Roadmap tracker task ids (p<phase index>t<task index>, 0-based) ticked when a lab is fully solved
@@ -270,6 +286,7 @@ ROADMAP = {
     "08": ["p2t7"],  # Phase 3: Pentest a local ERPNext/Frappe instance (project)
     "09": ["p3t1"],  # Phase 4: Build & attack a vulnerable AD lab
     "10": ["p4t3"],  # Phase 5: Docker security (capabilities, escapes, CIS)
+    "11": ["p5t1", "p5t3"],  # Phase 6: SAST (Bandit) + supply chain (gitleaks, pip-audit)
 }
 
 

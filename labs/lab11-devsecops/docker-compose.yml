@@ -1,0 +1,15 @@
+name: lab11-devsecops
+
+services:
+  scanner:
+    build:
+      context: .
+      dockerfile: scanner/Dockerfile
+    container_name: lab11-scanner
+    hostname: devsecops
+    networks:
+      - labnet
+
+networks:
+  labnet:
+    driver: bridge

@@ -99,10 +99,20 @@ window.LAB_PROGRESS = {
       "done": 6,
       "tasks": 6,
       "last": "2026-11-12 23:11"
+    },
+    {
+      "id": "11",
+      "title": "DevSecOps: SAST, Secret Scanning & Dependency Analysis",
+      "phase": 6,
+      "score": 14,
+      "max": 14,
+      "done": 6,
+      "tasks": 6,
+      "last": "2026-11-13 20:36"
     }
   ],
-  "score": 132,
-  "max": 132,
+  "score": 146,
+  "max": 146,
   "roadmap": [
     "p0t7",
     "p0t4",
@@ -113,7 +123,9 @@ window.LAB_PROGRESS = {
     "p2t5",
     "p2t7",
     "p3t1",
-    "p4t3"
+    "p4t3",
+    "p5t1",
+    "p5t3"
   ],
-  "updated": "2026-11-12 23:12"
+  "updated": "2026-11-13 20:37"
 };

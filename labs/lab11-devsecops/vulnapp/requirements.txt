@@ -1,0 +1,6 @@
+# Northwind internal tools — pinned (and badly out of date) dependencies
+Flask==0.12.2
+Jinja2==2.10
+PyYAML==5.1
+requests==2.19.1
+Werkzeug==0.14.1
