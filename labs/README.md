@@ -19,11 +19,12 @@ submit flags and answers, and `check.py` checks them against the running lab and
 | [03](lab03-crypto-tls/README.md) | Password cracking (John), TLS cert inspection, building a CA, mutual TLS | 1 | Done 12/12 · report written |
 | [04](lab04-soc/README.md) | Build a mini-SOC: SIEM log pipeline, detection-as-code, ATT&CK triage | 2 | Done 12/12 · report written |
 | [05](lab05-threat-hunt/README.md) | Threat hunt: reconstruct a multi-stage web intrusion from noisy logs | 2 | Done 12/12 · report written |
-| [06](lab06-web-owasp/README.md) | Web app hacking: SQLi, IDOR, command injection, path traversal (OWASP Top 10) | 3 | Done 12/12 · report drafted (add your notes) |
-| [07](lab07-privesc/README.md) | Linux privilege escalation: SUID, sudo/GTFOBins, cron, Linux capabilities | 3 | Done 14/14 · report drafted (add your notes) |
-| [08](lab08-erpnext-pentest/README.md) | ERPNext/Frappe pentest: default creds, guest API, SQLi, BOLA/IDOR (OWASP API Top 10) | 3 | Done 14/14 · report drafted (add your notes) |
-| [09](lab09-active-directory/README.md) | Active Directory: domain enumeration, password spraying, SMB/LDAP initial access | 4 | Done 14/14 · report drafted (add your notes) |
-| [10](lab10-container-escape/README.md) | Container escape: mounted docker.sock, privileged, capabilities, secret exposure | 5 | Done 14/14 · report drafted (add your notes) |
+| [06](lab06-web-owasp/README.md) | Web app hacking: SQLi, IDOR, command injection, path traversal (OWASP Top 10) | 3 | Done 12/12 · report complete (review) |
+| [07](lab07-privesc/README.md) | Linux privilege escalation: SUID, sudo/GTFOBins, cron, Linux capabilities | 3 | Done 14/14 · report complete (review) |
+| [08](lab08-erpnext-pentest/README.md) | ERPNext/Frappe pentest: default creds, guest API, SQLi, BOLA/IDOR (OWASP API Top 10) | 3 | Done 14/14 · report complete (review) |
+| [09](lab09-active-directory/README.md) | Active Directory: domain enumeration, password spraying, SMB/LDAP initial access | 4 | Done 14/14 · report complete (review) |
+| [10](lab10-container-escape/README.md) | Container escape: mounted docker.sock, privileged, capabilities, secret exposure | 5 | Done 14/14 · report complete (review) |
+| [11](lab11-devsecops/README.md) | DevSecOps: SAST (Bandit), secret scanning (gitleaks), dependency CVEs (pip-audit), code review | 6 | Done 14/14 · report complete (review) |
 
 Planned: cloud IAM / AWS security (P5), Kubernetes security (P5), and more.
 

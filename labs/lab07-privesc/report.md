@@ -22,7 +22,9 @@ common, well-understood configuration mistake — not a software vulnerability �
 low-cost fix (see §4). Because root access allows reading all data, modifying any file, and establishing
 persistence, the aggregate risk is **High** and remediation should not be deferred.
 
-> **YOUR NOTES:** add 2–3 sentences in your own words — what surprised you, and which finding you'd fix first.
+**What surprised me.** How many different ways one box could go to root — five, all independent. It drives
+home that fixing one isn't enough; containment means closing every path. I'd fix the sudo rule (F-2) first —
+passwordless sudo to `awk` is instant root for anyone with that account, no tricks needed.
 
 ## 2. Findings at a glance
 | # | Finding | Vector | Severity | MITRE ATT&CK |
@@ -59,7 +61,10 @@ cat /root/flags/suid.txt                    # FLAG{suid_95ab8c1af450}
 **Remediation.** Remove the bit: `chmod u-s /usr/bin/find`. Never ship the SUID bit on binaries that can
 execute commands or read arbitrary files. Audit periodically with the `find -perm -4000` sweep above.
 
-> **YOUR NOTES:** why does `-p` matter here? (Hint: what does a normal shell do with privileges on startup?)
+**Why `-p` matters.** A normal shell drops privileges on startup — if the real uid and effective uid don't
+match, it resets the effective one back to the real user, so the root the SUID binary gave me gets thrown
+away. The `-p` flag tells the shell *not* to do that, so it keeps the root effective uid. Without `-p` I'd
+just drop back to my low-priv user and the whole SUID trick is pointless.
 
 ### F-2 — Sudo rule allows `awk` as root  ·  Severity: High  ·  T1548.003
 **Description.** `webdev` is permitted to run `/usr/bin/awk` as root with no password. `awk` can execute
@@ -144,5 +149,9 @@ policy / MFA for any interactive accounts.
 - **The theme is least privilege.** SUID, sudo, capabilities, and scheduled jobs are all mechanisms for
   granting power; each becomes a privesc path the moment it grants *more* power than needed.
 
-> **YOUR NOTES:** which of these four techniques would be hardest for a blue team to detect, and why?
+**Hardest to detect.** The capability one (`cap_setuid` on a python copy). SUID abuse, sudo, and cron all
+leave something — a new SUID file, a sudo log entry, a cron job running as root. A file capability is quiet:
+there's no log when I run the binary, and it looks like a normal process. A blue team only catches it by
+auditing capabilities ahead of time (`getcap -r /`), not from runtime logs — which ties back to Lab 04: you
+can only alert on what actually gets logged.
 > (Good interview answer material — tie it back to what you built in Lab 04's SIEM.)

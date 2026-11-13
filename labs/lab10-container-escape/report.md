@@ -20,8 +20,11 @@ full compromise of the host and, through it, every other container it runs. The 
 **secrets** in a config file and an environment variable. None of this required an exploit; these are
 configuration mistakes, each with a simple fix (§4).
 
-> **YOUR NOTES:** 2–3 sentences in your own words — why is "a container got popped" vs "the host is owned"
-> the key distinction here, and which misconfig alone is already game-over?
+**Container popped vs. host owned.** "A container got popped" should mean the blast radius is one container —
+that's the whole point of isolation. Here it's "the host is owned" because the container can reach the host's
+Docker socket, so from one popped container I control the entire host and every other container on it. Either
+the mounted `docker.sock` or `--privileged` alone is game-over — each one on its own breaks the boundary
+completely.
 
 ## 2. Findings at a glance
 | # | Finding | MITRE ATT&CK | Severity |
@@ -51,8 +54,11 @@ launch privileged containers, persist. In a cluster this is lateral movement to 
 use a brokered, least-privilege proxy (e.g. a socket-proxy restricting the API surface) — never the raw
 socket. The same applies to the container runtime socket in Kubernetes pods.
 
-> **YOUR NOTES:** describe one *detection* for this (hint: what would the Lab 04 SIEM look for — an unexpected
-> `docker run` / container-create event originating from a workload container?).
+**One detection.** Watch the Docker daemon / audit logs for a container-create or container-run event that
+originates from *inside* a workload container — a web app spawning a new container that mounts the host
+filesystem is not normal and is a huge red flag. Runtime tools like Falco do exactly this (alert on a shell or
+`docker` command inside a container, or a host-path mount). Same idea as Lab 04: define "normal" and alert on
+the anomaly.
 
 ### F-2 — `--privileged` container · High · T1611
 **Description.** The container runs with `--privileged`, which grants the **full Linux capability set** and
@@ -95,5 +101,7 @@ and scope cloud credentials to least privilege with short lifetimes.
 - **Secrets management is a container-security problem.** Images and env vars are the two worst places for
   secrets, and both are the default path of least resistance — which is why they're so commonly abused.
 
-> **YOUR NOTES:** which single hardening control would you implement first across the whole fleet, and why?
-> (Tie it to the CIS Docker Benchmark.)
+**First control across the fleet.** Removing the `docker.sock` mount — nothing else gives that much return. A
+mounted socket is a direct path to host root from any container, so banning it fleet-wide (and scanning for it
+in CI with the CIS Docker Benchmark / docker-bench-security) closes the worst door everywhere at once. Dropping
+`--privileged` is a close second.
