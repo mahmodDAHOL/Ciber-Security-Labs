@@ -543,9 +543,41 @@ function syncLabs(){
   save();
 }
 
+// Each completed lab also demonstrates skills, prepares interview answers, and represents study time.
+// These seed the Skills / Interview / Study-log tabs so they reflect your lab work (edit any of it after).
+const LAB_SKILLS={"01":[["net",3]],"02":[["os",3],["pt",3]],"03":[["fund",3]],
+ "04":[["soc",3],["auto",3]],"05":[["ir",3],["soc",3],["dfir",2]],"06":[["web",3],["pt",3]],
+ "07":[["pt",3],["os",3]],"08":[["web",3],["pt",3]],"09":[["ad",3],["pt",3]],
+ "10":[["cont",3]],"11":[["appsec",3],["auto",3]]};
+const LAB_IV={"01":["q0_1","q0_4"],"02":["q3_5"],"03":["q0_3","q1_0","q1_1"],
+ "04":["q2_0","q2_1","q2_2","q2_5"],"05":["q2_2","q2_3"],"06":["q3_0","q3_1","q3_3","q1_4"],
+ "07":["q3_5"],"08":["q3_0","q3_3"],"09":["q3_4"],"10":["q4_2"],"11":["q4_3"]};
+const LAB_HOURS={"01":4,"02":5,"03":4,"04":4,"05":4,"06":5,"07":4,"08":6,"09":5,"10":4,"11":4};
+
+function syncLabsExtras(){
+  if(!LP)return;
+  S.extras=S.extras||{};
+  S.extras.skillLabs=S.extras.skillLabs||{}; S.extras.iv=S.extras.iv||{}; S.extras.logDates=S.extras.logDates||{};
+  const done=LP.labs.filter(l=>l.done===l.tasks).map(l=>l.id);
+  // Skills: seed each lab's skills once (only ever raise, never lower what you set)
+  done.forEach(id=>{ if(!S.extras.skillLabs[id]){ (LAB_SKILLS[id]||[]).forEach(([k,v])=>S.skills[k]=Math.max(S.skills[k]||0,v)); S.extras.skillLabs[id]=true; }});
+  if(done.length>=3 && !S.extras.comm){ S.skills.comm=Math.max(S.skills.comm||0,3); S.extras.comm=true; }  // wrote reports
+  // Interview prep: tick each covered question once (never unticks)
+  done.forEach(id=>(LAB_IV[id]||[]).forEach(q=>{ if(!S.extras.iv[q]){ S.iv[q]=true; S.extras.iv[q]=true; }}));
+  if(done.length>=5 && !S.extras.port){ S.iv["q5_2"]=true; S.extras.port=true; }  // portfolio project
+  // Study log: one entry per lab-completion day, once (hours estimated from the lab READMEs — edit to actual)
+  const byDate={}; LP.labs.filter(l=>l.done===l.tasks&&l.last).forEach(l=>{const d=l.last.slice(0,10);(byDate[d]=byDate[d]||[]).push(l.id);});
+  Object.entries(byDate).forEach(([d,ids])=>{ if(!S.extras.logDates[d]){
+    const hrs=ids.reduce((a,id)=>a+(LAB_HOURS[id]||4),0);
+    S.log.push({id:"lab-"+d,date:d,hours:hrs,note:"Lab "+ids.join(", ")+" (from lab estimate — edit to your actual hours)"});
+    S.extras.logDates[d]=true; }});
+  save();
+}
+
 function init(){
   if(S.theme)document.documentElement.dataset.theme=S.theme;
   syncLabs();
+  syncLabsExtras();
   $("#start").value=S.start;$("#weekly").value=S.weekly;$("#logDate").value=new Date().toISOString().slice(0,10);
   renderAll();
 }
