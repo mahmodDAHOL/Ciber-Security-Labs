@@ -1,0 +1,15 @@
+name: lab12-dfir
+
+services:
+  host:
+    build:
+      context: .
+      dockerfile: host/Dockerfile
+    container_name: lab12-host
+    hostname: prod-erp
+    networks:
+      - labnet
+
+networks:
+  labnet:
+    driver: bridge

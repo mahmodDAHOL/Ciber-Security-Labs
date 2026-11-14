@@ -164,6 +164,29 @@ def lab11_secret(key):
     return lambda answer: answer.strip() == lab11_ans().get(key, "\x00").strip()
 
 
+def lab12_ans():
+    return json.loads(docker_exec("lab12-host", "cat", "/opt/.lab12_answers.json"))
+
+
+def lab12_field(key, ci=False):
+    def check(answer):
+        want = lab12_ans().get(key, "\x00")
+        a, w = answer.strip(), want.strip()
+        return a.lower() == w.lower() if ci else a == w
+    return check
+
+
+def lab12_malware_path(answer):
+    want = lab12_ans()["malware_path"].lower()
+    a = answer.strip().lower().rstrip("/")
+    return a == want or a == want.rsplit("/", 1)[-1]
+
+
+def lab12_sha256(answer):
+    h = docker_exec("lab12-host", "sha256sum", "/dev/shm/.update").split()[0]
+    return answer.strip().lower() == h.lower()
+
+
 def key_equals(field):
     def check(answer):
         return answer.strip().lower() == lab05_key()[field].strip().lower()
@@ -273,6 +296,14 @@ LABS = {
         "5": ("Manual review: the insecure deserialization vuln (function/CWE)", hash_is("pickle", "pickleloads", "deserialization", "insecuredeserialization", "cwe502"), 2),
         "6": ("What does SAST stand for?", hash_is("staticapplicationsecuritytesting", "sast"), 1),
     }),
+    "12": ("Digital Forensics & Incident Response", 7, {
+        "1": ("Timeline: the attacker's source IP (auth.log)", lab12_field("attacker_ip"), 2),
+        "2": ("Locate the dropped malware (full path)", lab12_malware_path, 3),
+        "3": ("IOC: SHA-256 of the malware sample", lab12_sha256, 2),
+        "4": ("Static analysis: the malware's C2 server IP", lab12_field("c2_ip"), 3),
+        "5": ("Static analysis: decode the base64 payload -> flag", lab12_field("payload_flag"), 2),
+        "6": ("Persistence: the backdoor account the attacker added", lab12_field("persist_user", ci=True), 2),
+    }),
 }
 
 # Roadmap tracker task ids (p<phase index>t<task index>, 0-based) ticked when a lab is fully solved
@@ -287,6 +318,7 @@ ROADMAP = {
     "09": ["p3t1"],  # Phase 4: Build & attack a vulnerable AD lab
     "10": ["p4t3"],  # Phase 5: Docker security (capabilities, escapes, CIS)
     "11": ["p5t1", "p5t3"],  # Phase 6: SAST (Bandit) + supply chain (gitleaks, pip-audit)
+    "12": ["p6t3", "p6t4"],  # Phase 7: DFIR basics + malware analysis intro
 }
 
 

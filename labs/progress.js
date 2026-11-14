@@ -109,10 +109,20 @@ window.LAB_PROGRESS = {
       "done": 6,
       "tasks": 6,
       "last": "2026-11-13 20:36"
+    },
+    {
+      "id": "12",
+      "title": "Digital Forensics & Incident Response",
+      "phase": 7,
+      "score": 14,
+      "max": 14,
+      "done": 6,
+      "tasks": 6,
+      "last": "2026-11-14 17:00"
     }
   ],
-  "score": 146,
-  "max": 146,
+  "score": 160,
+  "max": 160,
   "roadmap": [
     "p0t7",
     "p0t4",
@@ -125,7 +135,9 @@ window.LAB_PROGRESS = {
     "p3t1",
     "p4t3",
     "p5t1",
-    "p5t3"
+    "p5t3",
+    "p6t3",
+    "p6t4"
   ],
-  "updated": "2026-11-13 20:37"
+  "updated": "2026-11-14 17:00"
 };

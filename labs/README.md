@@ -25,6 +25,7 @@ submit flags and answers, and `check.py` checks them against the running lab and
 | [09](lab09-active-directory/README.md) | Active Directory: domain enumeration, password spraying, SMB/LDAP initial access | 4 | Done 14/14 · report complete (review) |
 | [10](lab10-container-escape/README.md) | Container escape: mounted docker.sock, privileged, capabilities, secret exposure | 5 | Done 14/14 · report complete (review) |
 | [11](lab11-devsecops/README.md) | DevSecOps: SAST (Bandit), secret scanning (gitleaks), dependency CVEs (pip-audit), code review | 6 | Done 14/14 · report complete (review) |
+| [12](lab12-dfir/README.md) | DFIR: Linux host forensics, timeline, static malware analysis, IOCs, persistence hunting | 7 | Done 14/14 · report pending |
 
 Planned: cloud IAM / AWS security (P5), Kubernetes security (P5), and more.
 
